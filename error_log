@@ -1,0 +1,1 @@
+[25-May-2021 17:24:22 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'root'@'localhost' (using password: NO) in /home/superqcp/public_html/m3avenue.com/dbconfig.php on line 14

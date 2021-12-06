@@ -1,0 +1,30 @@
+[04-Jul-2021 15:28:37 Asia/Kolkata] PHP Warning:  fopen(../offerletter/logo_f.png): failed to open stream: No such file or directory in /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php on line 1257
+[04-Jul-2021 15:28:37 Asia/Kolkata] PHP Fatal error:  Uncaught Exception: FPDF error: Can't open image file: ../offerletter/logo_f.png in /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php:271
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php(1259): FPDF->Error('Can't open imag...')
+#1 /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php(885): FPDF->_parsepng('../offerletter/...')
+#2 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(120): FPDF->Image('../offerletter/...', 0, 1, 210, 47)
+#3 /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php(334): PDF->Header()
+#4 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(131): FPDF->AddPage()
+#5 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/offerletter/fpdf/fpdf.php on line 271
+[05-Jul-2021 02:01:39 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(4): runQuery('SELECT * FROM e...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[05-Jul-2021 02:01:39 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(4): runQuery('SELECT * FROM e...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[05-Jul-2021 02:02:01 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(4): runQuery('SELECT * FROM e...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[05-Jul-2021 02:02:06 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/offerletter/offerletter.php(4): runQuery('SELECT * FROM e...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221

@@ -1,0 +1,40 @@
+[15-Jul-2021 14:41:56 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:42:00 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:42:31 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:43:12 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:43:28 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:44:04 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[15-Jul-2021 14:45:05 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/dev/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/dev/m3avenue.com/admin/ajax/ajax.php(10): runQuery('select dailer_s...')
+#1 {main}
+  thrown in /home/superqcp/public_html/dev/m3avenue.com/functions.php on line 221
+[18-Jul-2021 10:31:33 Asia/Kolkata] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/superqcp/public_html/m3avenue.com/functions.php:221
+Stack trace:
+#0 /home/superqcp/public_html/m3avenue.com/admin/ajax/ajax.php(18): runQuery('select  from  w...')
+#1 {main}
+  thrown in /home/superqcp/public_html/m3avenue.com/functions.php on line 221
