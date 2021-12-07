@@ -1315,14 +1315,30 @@ $pagearray =  $pagerarray = [];
                  $followuparray['followup'] = $_REQUEST['followup'];
                  $followuparray['remarks'] = $_REQUEST['remarks'];
 			     $followupresults = insertQuery($followuparray,'lead_application_followups');
-        $payload = ['status' => '1','message'=> 'Follow up added successfully'];
+        			$payload = ['status' => '1','message'=> 'Follow up added successfully'];
                 }
                 else{
                     $payload = ['status' => '0','message'=> 'Please Provide Application Id'];
                 }
-        
         break;
-        default:
+		case 'lead_employee_details':
+			if(!empty($_REQUEST['lead_employee_id'])){
+				$lead_employee_id = $_REQUEST['lead_employee_id'];
+				$lead_emp_det_array = runQuery("select e.*,td.designation_name from employee e left join tbl_designations td on e.designation = td.ID 
+				where e.ID = '".$lead_employee_id."'");
+				$lead_employee_details = [];
+				$lead_employee_details['ID'] = $lead_emp_det_array['ID'];
+				$lead_employee_details['employee_name'] = $lead_emp_det_array['fname'].' '.$lead_emp_det_array['lname'];
+				$lead_employee_details['designation'] = $lead_emp_det_array['designation_name'];
+				$lead_employee_details['manager_name'] = manager_details_with_unique_id($lead_emp_det_array['leader'],'fname').' '.manager_details_with_unique_id($lead_emp_det_array['leader'],'lname');
+				$payload = ['status' => '1','lead_employee_details' => $lead_employee_details];
+			}
+			else{
+				$payload = ['status' => '0','message'=> 'Please Provide Employee Id'];
+			}
+			
+		break;	
+		default:
 				$payload = array('status'=>'0','message'=>'Please specify a valid action');
 		break;
 			}

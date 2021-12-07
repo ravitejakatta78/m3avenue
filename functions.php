@@ -651,20 +651,19 @@ function user_id($unique_id){
 
 }
 
-function employee_details($id,$type){
-
+function employee_details($id,$type = null){
 	include('dbconfig.php');
- $name = '';
-		if(!empty($id)){
-		$student_name = runQuery("select * from employee where ID = $id");
-
-		$name = $student_name[$type];
- 
-
+	$details = '';
+	if(!empty($id)){
+		$student_details = runQuery("select * from employee where ID = $id");
+		if(!empty($type)){
+			$details = $student_details[$type];
 		}
-
-	return $name;
-
+		else{
+			$details = $student_details;
+		}
+	}
+	return $details;
 }
 function user_details($id,$type){
 
