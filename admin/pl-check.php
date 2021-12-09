@@ -34,7 +34,6 @@ if(!empty($_POST))
 		$sqldata = runloopQuery("select pd.*,bank_name from pl_data pd inner join pl_banks pb on pb.ID = pd.bank_id where pd.company_category in ('".$catstring."')  and pd.salary_start <= '".$_POST['salary']."' 
 		and pd.salary_end >= '".$_POST['salary']."'");
 	}
-
 }
 
 
@@ -171,9 +170,9 @@ if(!empty($_POST))
 	$obligation = !empty($_POST['obligation']) ? $_POST['obligation'] : 0 ;
 	$emi = ($_POST['salary']  * ($foir/100)) -  $obligation;
 	$actual_loan_amount = (( $emi * ( pow(1+$roi_year,$tenure) -1) ) / ($roi_year * pow(1+$roi_year,$tenure)));
-	if(!empty($sqldata[$i]['multiplier'])){
+	if(!empty($sqldata[$i]['multiplier']) && is_numeric($sqldata[$i]['multiplier'] )){
 	    
-	    // $sqldata[$i]['multiplier'] * $_POST['salary'];
+	    //echo $sqldata[$i]['multiplier'] .'=='. $_POST['salary'];exit;
 	    $multiplier = $sqldata[$i]['multiplier'] * $_POST['salary'];    
     	$multiplier_loan_amount =  min([$actual_loan_amount,$multiplier]);
 	}
