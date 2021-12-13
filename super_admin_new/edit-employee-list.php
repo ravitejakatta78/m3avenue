@@ -349,7 +349,7 @@ else {
 						    
                         <label for="example-text-input" class="col-3 col-form-label">Confirm password</label>
                         <div class="col-3">
-                            <input class="form-control" name="confirm_pass" type="password" placeholder="Enter Leader employee id" >
+                            <input class="form-control" name="confirm_pass" type="password" placeholder="Enter Confirm Password" >
                         </div>
 						</div>
 						<br>
