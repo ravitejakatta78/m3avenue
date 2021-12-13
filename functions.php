@@ -618,7 +618,7 @@ function employee_id($unique_id){
 	return $name;
 
 }
-function lead_details($unique_id,$type){
+function lead_details($unique_id,$type=null){
 
 	include('dbconfig.php');
  		if(!empty($unique_id)){

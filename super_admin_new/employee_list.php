@@ -10,7 +10,8 @@ include('../functions.php');
 
 $userid = current_adminid(); 
 $user_unique_id = employee_details($userid,'unique_id');
-$tree = employeehirerachy($user_unique_id);
+$get_roles_array = [3,4,5];
+$tree = employeehirerachy($user_unique_id,$get_roles_array);
 //echo "<pre>";print_r($tree);exit;
 $empString = !empty($tree) ? implode("','",array_column($tree,'ID')) : '';
 if(empty($userid)){
@@ -20,6 +21,7 @@ if(empty($userid)){
 
 $message = '';
 if(!empty($_POST['fname'])){
+	
 	$mobile_number = mysqli_real_escape_string($conn,$_POST['mobile']);
 	$prev_mobile_det = runQuery("select * from employee where mobile = '".$mobile_number."'");
 
@@ -42,60 +44,14 @@ if(!empty($_POST['fname'])){
 	}
 	else{
 		$pagerarray  = array();
-
 		$docsarray=array();
-
-		if (!file_exists('../admin/empdocs/')) {	
-			mkdir('../admin/empdocs/', 0777, true);	
-		}
-		$docs_target_dir = '../admin/empdocs/';
-		$pan_img = $_FILES["panimg"]['name'];
-		$target_file = $docs_target_dir . strtolower($pan_img);
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-		{
-			$message .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";		
-			$uploadOk = 0;						
-		}
-		if ($uploadOk == 0) {			
-			$message .= "Sorry, your file was not uploaded.";		
-		} else {
-			if (move_uploaded_file($_FILES["panimg"]["tmp_name"], $target_file))
-			{
-
-				$docsarray[0]['file_name']= 'Pan Card';
-				$docsarray[0]['doc_name']= strtolower($pan_img);						
-			}
-		}
-		$adhar_img = $_FILES["adhaarimg"]['name'];
-		$target_file = $docs_target_dir . strtolower($adhar_img);
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-		{
-			$message .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";		
-			$uploadOk = 0;						
-		}
-		if ($uploadOk == 0) {			
-			$message .= "Sorry, your file was not uploaded.";		
-		} else {
-			if (move_uploaded_file($_FILES["adhaarimg"]["tmp_name"], $target_file))
-			{
-
-				$docsarray[1]['file_name']= 'Aadhar Card';
-				$docsarray[1]['doc_name']= strtolower($adhar_img);						
-			}
-		}
-
-		//print_r($docsarray); exit;
 
 		$uniqueusers = (int)runQuery("select max(ID) as id from employee order by ID desc")['id'];
 		$newuniquid = $uniqueusers+1;
 
 		$joining_date= mysqli_real_escape_string($conn,$_POST['join_date']);
 		$pagerarray['role_id'] = mysqli_real_escape_string($conn,$_POST['role_id']) ?? 2;
-		$pagerarray['leader']=$user_unique_id;
+		$pagerarray['leader']= ($_POST['role_id'] == '4') ? ($_POST['leader'] ??  $user_unique_id) : $user_unique_id;
 		$pagerarray['fname'] = mysqli_real_escape_string($conn,$_POST['fname']);
 		$pagerarray['lname'] = mysqli_real_escape_string($conn,$_POST['lname']);
 		$pagerarray['unique_id'] = 'M3'.sprintf('%05d',$newuniquid);
@@ -121,20 +77,32 @@ if(!empty($_POST['fname'])){
 		$pagerarray['location'] = mysqli_real_escape_string($conn,$_POST['location']);
 		$pagerarray['status'] = '1';
 
-		$result = insertIDQuery($pagerarray,'employee');
+		$new_employee_id = insertIDQuery($pagerarray,'employee');
 
-		if($result)
+		if($new_employee_id)
 		{
-			
-			foreach($docsarray as $key=>$val)
-			{
-				$temp['file_name']=$val['file_name'];
-				$temp['doc_name'] = $val['doc_name'];
-				$temp['employee_id'] = $result;
-				$temp['reg_date']= date('Y-m-d');
-				$temp['created_on']= date('Y-m-d H:i:s A');	
-				$result_aa = insertQuery($temp,'employee_documents');
+			if(!empty(array_filter($_FILES['uploadedfile']['name']))) {
+				foreach ($_FILES['uploadedfile']['tmp_name'] as $key => $value) {
+					$file_tmpname = $_FILES['uploadedfile']['tmp_name'][$key];
+					$file_name = $_FILES['uploadedfile']['name'][$key];
+					$file_size = $_FILES['uploadedfile']['size'][$key];
+					$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);		
+					$newname = date('YmdHis',time()).mt_rand().'.'.$file_ext;
+					$path = '../../sp_ace_docs/empdocs/';
+					if (!is_dir($path)) {
+						mkdir($path, 0777, true);
+					}
+		
+					move_uploaded_file($file_tmpname,$path.'/'.$newname);
+					$docsarray['file_name'] = $_POST['uploadedfilename'][$key];
+					$docsarray['doc_name'] = $newname;
+					$docsarray['employee_id'] = $new_employee_id;
+					$docsarray['reg_date'] = date('Y-m-d');
+					$docsarray['created_on'] = date('Y-m-d H:i:s A');
+					$result = insertQuery($docsarray,'employee_documents');
+				}
 			}
+
 			
 			header("Location: employee_list.php?success=success");
 		}
@@ -173,27 +141,7 @@ if(!empty($_GET['delete'])){
 if(!empty($_POST['uploaddata']))
 {
 	$upload_employee_id = $_POST['upload_employee_id'];
-    if(!empty(array_filter($_FILES['uploadedfile']['name']))) {
-		foreach ($_FILES['uploadedfile']['tmp_name'] as $key => $value) {
-			$file_tmpname = $_FILES['uploadedfile']['tmp_name'][$key];
-            $file_name = $_FILES['uploadedfile']['name'][$key];
-            $file_size = $_FILES['uploadedfile']['size'][$key];
-            $file_ext = pathinfo($file_name, PATHINFO_EXTENSION);		
-			$newname = date('YmdHis',time()).mt_rand().'.'.$file_ext;
-			$path = '../admin/empdocs/';
-			if (!is_dir($path)) {
-				mkdir($path, 0777, true);
-			}
-
-			move_uploaded_file($file_tmpname,$path.'/'.$newname);
-			$docsarray['file_name'] = $_POST['uploadedfilename'][$key];
-			$docsarray['doc_name'] = $newname;
-			$docsarray['employee_id'] = $upload_employee_id;
-			$docsarray['reg_date'] = date('Y-m-d');
-			$docsarray['created_on'] = date('Y-m-d H:i:s A');
-			$result = insertQuery($docsarray,'employee_documents');
-		}
-	}
+    
 	header("Location:employee_list.php?usuccess=success");
 }
 
@@ -201,7 +149,8 @@ if(!empty($_POST['uploaddata']))
 $roles = roles();
 
 $superadmins = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where ID =  '".$userid."'");
-$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where role_id = 3 and leader = '".$user_unique_id."' order by ID desc");
+$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where role_id = 3 
+and leader = '".$user_unique_id."' order by ID desc");
 $manager_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 3  order by ID desc");
 $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 4  order by ID desc");
 
@@ -331,18 +280,14 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 									<thead>
 										<tr>
 											<th>S.No</th>
-											<th>EMP Id</th>
-											<th>Full Name</th> 
-											<th>Role</th>
-											<th>Bank details</th>
+											<th>EMP Details</th>
+											<th>Contact Info</th>
+											<th>Reporting Manager</th>
+					 						<th>Role</th>
 											<th>Docs</th>
-											<!-- <th>Pan Card</th>
-											<th>Adhaar Card</th> -->
-											<th>Address</th>
 											<th>Reg date</th>
 											<th>Offer Letter</th>
 											<th>Action</th>
-											<th>Dailer Status</th>
 											<th>Status</th>
 										</tr>
 										
@@ -360,30 +305,27 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 											?>
 											<tr>
 												<td><?php echo  $x;?></td>
-												<td><?php echo $row["unique_id"];?></td>
 												<td><?php echo $row["fname"];?> <?php echo $row["lname"];?>
 												<br/><?php echo $row["email"];?>
-												<br/><?php echo $row["mobile"];?></td>
+												<br/><?php echo $row["unique_id"];?></td>
+												<td><?php echo $row["mobile"];?>
+												<br/><?php echo $row["whatsapp_number"];?>
+												<br/><?php echo $row["alternate_mobile_number"];?></td>
+												<td><?php echo lead_details($row["leader"],'fname').' '.lead_details($row["leader"],'lname');?></td>
 												<td><?php echo $row['role_id'] ? roles($row['role_id']) : 'No Role Assigned'; ?></td>
-
-												<td><?php echo $row["bankdetails"];?>
-												<br/><?php echo $row["accntnum"];?>
-												<br/><?php echo $row["ifsccode"];?></td>
-												<!-- <td><?php $panimgpath="../admin/empimage/".$row["panimg"];if(file_exists($panimgpath)){?><a href="../admin/empimage/<?php echo $row["panimg"];?>" class="html5lightbox" >View</a><?php }else{ echo "File not found";}?></td>
-												<td><?php $aadharpath="../admin/empimage/".$row["adhaarimg"];if(file_exists($aadharpath)){?><a href="../admin/empimage/<?php echo $row["adhaarimg"];?>" class="html5lightbox" >View</a><?php }else{ echo "File not found";}?></td> --> 
 												<td>
 													<?php if(count($employee_documents)>0){ ?>
 														<button type="button" class="btn btn-primary" onclick="preview_doc(<?php echo $row['ID'];?>)">
 														  Preview 
 														</button>
 													<?php  } ?>
-												    <button type="button" class="btn btn-success" onclick="upload_doc(<?php echo $row['ID'];?>)">
+												    <!-- <button type="button" class="btn btn-success" onclick="upload_doc(<?php echo $row['ID'];?>)">
 														Upload
-													</button>
+													</button> -->
 													
 												</td>
 
-												<td><?php echo $row["address"];?></td>
+												
 												<td><?php echo reg_date($row["reg_date"]);?></td>
 												<td>	<?php if(file_exists($path)){ ?>
 													<a class="btn btn-info" target="_blank" href="../offerletter/Offer_letters/<?php echo $row["unique_id"]?>_offerletter.pdf">Download</a> 
@@ -401,8 +343,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 													<span class="slider round"></span>
 												</label>
 
-											</td>
-											<td>
+											
 												<label class="switch">
 													<input type="checkbox" id="empstatusid"  <?php if($row['status']=='1'){ echo 'checked';}?> onChange="changeemployeestatus('empstatus',<?php echo $row['ID'];?>);">
 													<span class="slider round"></span>
@@ -481,7 +422,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         						</div>
         						<div class="row mt-2">
         							<div class="col">
-        								<label class="font-weight-bold">Employee Email</label>
+        								<label class="font-weight-bold">Offical Email</label>
         								<input class="form-control" type="text" name="employee_email" placeholder="Enter employee email" id="employee_email" required>  
         							</div>
         							<div class="col">
@@ -515,7 +456,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         						<div class="row mt-2">
         							<div class="col">
         									<label class="font-weight-bold">Address</label>
-        									<input type="text" class="form-control" placeholder="Enter House No and Street name" id="house_no" name="address" required>
+        									<textarea class="form-control" placeholder="Enter House No and Street name" id="house_no" name="address" required></textarea>
         							</div>
         						</div>
         						<div class="row mt-2">
@@ -597,21 +538,29 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         									<input class="form-control" type="text" name="location"     placeholder="Enter work location" id="location" required>
         								</div> 
         							</div>			
-        							<div class="row mt-2">
-        								<div class="col"> 
-        									<label for="example-text-input" class="font-weight-bold">Upload PAN Card</label>
-        									<div class="custom-file">
-        										<input type="file" class="custom-file-input" name="panimg" id="panimg"><label class="custom-file-label" for="customFile">Choose file</label>
-        									</div>
-        								</div>
-        								<div class="col"> 
-        									<label for="example-text-input" class="font-weight-bold" >Upload ADHAAR Card</label>
-        									<div class="custom-file">
-        										<input type="file" class="custom-file-input" name="adhaarimg" id="adhaarimg">
-        										<label class="custom-file-label" for="customFile">Choose file</label>
-        									</div>
-        								</div>
-        							</div>
+									<table id="tblAddRow" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+							    <th>File Name</th>
+								<th>File</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+							    <td>
+								<input type="text" name="uploadedfilename[]" class="form-control">
+								</td>
+								<td>
+								<input type="file" name="uploadedfile[]" class="form-control">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="modal-footer">
+							<button id="btnAddRow" class="btn btn-success" type="button">Add Row</button>
+					</div>
         						</form>
 
         					</div>
@@ -635,30 +584,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 		      <div class="modal-body">
 				<form method="post" action="" id="upload-data-form-id" enctype="multipart/form-data">
 				<input type="hidden"  id="upload_employee_id" name="upload_employee_id">
-					<table id="tblAddRow" class="table table-bordered table-striped">
-						<thead>
-							<tr>
-							    <th>File Name</th>
-								<th>File</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-							    <td>
-								<input type="text" name="uploadedfilename[]" class="form-control">
-								</td>
-								<td>
-								<input type="file" name="uploadedfile[]" class="form-control">
-								</td>
-							</tr>
-						</tbody>
-					</table>
-
-					<div class="modal-footer">
-							<button id="btnAddRow" class="btn btn-success" type="button">Add Row</button>
-							<input type="submit" id="uploadData" class="btn btn-success" name="uploaddata" value="Upload Data">
-					</div>
+					
 				</form>
 		      </div>
 		    </div>
@@ -818,32 +744,8 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         		alert("Passwords Not Matched");
         	}
 
-        	$('#addempform').find('input[type=file]').each(function(){
-        		
-        	if($('#'+this.id)[0].files.length === 0){
-        			err_value = err_value + 1;
-        			alert("Please Upload File");
-				//$("#"+this.id).css('border','1px solid red','padding','2px');
-			}
-			else{
-				var fileInput = document.getElementById(this.id);
-				var filePath = fileInput.value;
-				// Allowing file type
-				var allowedExtensions = 
-				/(\.jpg|\.jpeg|\.png|\.gif)$/i;
-				if (!allowedExtensions.exec(filePath)) {
-					err_value = err_value + 1;
-					alert('Invalid file type');
-					$("#"+this.id).css('border','1px solid red','padding','2px');
-					fileInput.value = '';
-					
-				}
-				else{
-					$("#"+this.id).css('border','1px solid black','padding','2px');
-				}
+        	
 
-			}
-		});	
         	if(err_value == 0)
         	{
         		$("#addempsubmitid").hide();
@@ -902,7 +804,7 @@ function preview_doc(employee_id){
 		$("#docbody").append('<div class="row"><div class="col">');
 		$("#docbody").append(`<table width="100%" id="doctable"><tr><th class="tablestyle">S.No</th><th class="tablestyle">File Name</th><th class="tablestyle">File</th></tr>`);
         for(i=0; i < result.length ; i++) {
-			$("#doctable").append(`<tr><td class="tablestyle">${(i+1)}</td><td class="tablestyle">${result[i]['file_name']}</td><td class="tablestyle"><a target="_blank" href="../admin/empdocs/${result[i]['doc_name']}"><img src="../admin/empdocs/${result[i]['doc_name']}"
+			$("#doctable").append(`<tr><td class="tablestyle">${(i+1)}</td><td class="tablestyle">${result[i]['file_name']}</td><td class="tablestyle"><a target="_blank" href="../../sp_ace_docs/empdocs/${result[i]['doc_name']}"><img src="../../sp_ace_docs/empdocs/${result[i]['doc_name']}"
 			 class="borders" style="display: inline-block;width: 100px;height: 100px;margin: 6px;"></a></td></tr>`);
 
             

@@ -17,9 +17,9 @@
 	
 	<!-- Chart piety plugin files -->
     <script src="assets/vendor/peity/jquery.peity.min.js"></script>
-	<!-- Dashboard 1 -->
+	<!-- Dashboard 1 
 	<script src="assets/js/dashboard/dashboard-1.js"></script>
-	
+	-->
 	<script src="assets/vendor/owl-carousel/owl.carousel.js"></script>
 
 
