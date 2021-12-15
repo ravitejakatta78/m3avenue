@@ -8,90 +8,53 @@ if(empty($userid)){
 } 
 $message = '';
 $user_unique_id = employee_details($userid,'unique_id');
+$get_roles_array = [3,4,5];
+$tree = employeehirerachy($user_unique_id,$get_roles_array);
+//echo "<pre>";print_r($tree);exit;
+$empString = !empty($tree) ? implode("','",array_column($tree,'ID')) : '';
 
 $employeedetails = runQuery("select * from employee where ID = '".$_GET['edit']."'");
 $message = '';
 if(!empty($_POST['submit'])){
-			if(!empty($_POST['fname'])){
-	   $pagerarray  = array();
-
-		  if (!file_exists('empimage')) {	
-		mkdir('empimage', 0777, true);	
-		}
-	    $target_dir = 'empimage/';									
-
-			 if(!empty($_FILES["panimg"]['name'])){
-		$file = $_FILES["panimg"]['name'];				
-		$target_file = $target_dir . strtolower($file);		
-
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-
-			{
-		$message .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";		
-		$uploadOk = 0;						
-		}
-	    if ($uploadOk == 0) {			
-		$message .= "Sorry, your file was not uploaded.";		
-		} else {
-			if (move_uploaded_file($_FILES["panimg"]["tmp_name"], $target_file)){				
-				$pagerarray['panimg'] = strtolower($file);						
-				} else {
-					$message .= "Sorry, There Was an Error Uploading Your File.";			
-					}
-				}
-				}
-			 if(!empty($_FILES["adhaarimg"]['name'])){
-		$file = $_FILES["adhaarimg"]['name'];				
-		$target_file = $target_dir . strtolower($file);		
-
-		$uploadOk = 1;
-		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-
-		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-
-			{
-		$message .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";		
-		$uploadOk = 0;						
-		}
-	    if ($uploadOk == 0) {			
-		$message .= "Sorry, your file was not uploaded.";		
-		} else {
-			if (move_uploaded_file($_FILES["adhaarimg"]["tmp_name"], $target_file)){				
-				$pagerarray['adhaarimg'] = strtolower($file);						
-				} else {
-					$message .= "Sorry, There Was an Error Uploading Your File.";			
-					}
-				} 
-				} 
-				$pagewererarray['ID'] = $employeedetails['ID']; 
-                if($_POST['role_id']=='4')
-                {
-                	$pagerarray['leader'] = mysqli_real_escape_string($conn,$_POST['leader']);
-                }
-                $pagerarray['role_id'] = mysqli_real_escape_string($conn,$_POST['role_id']);
-                $pagerarray['fname'] = mysqli_real_escape_string($conn,$_POST['fname']);
-                $pagerarray['lname'] = mysqli_real_escape_string($conn,$_POST['lname']);  
-                $pagerarray['bankdetails'] = mysqli_real_escape_string($conn,$_POST['bankdetails']);
-                $pagerarray['accntnum'] = mysqli_real_escape_string($conn,$_POST['accntnum']);
-                $pagerarray['ifsccode'] = mysqli_real_escape_string($conn,$_POST['ifsccode']);
-                $pagerarray['address'] = mysqli_real_escape_string($conn,$_POST['address']);
-                $pagerarray['income'] = mysqli_real_escape_string($conn,$_POST['income']);
-                $pagerarray['pannum'] = mysqli_real_escape_string($conn,$_POST['pannum']);
-                
-	            $result = updateQuery($pagerarray,'employee',$pagewererarray);
-				if(!$result){
-					header("Location: employee_list.php?usuccess=success");
-                    }
+    if (!empty($_POST['fname'])) {
+        $pagerarray  = array();
+        $pagewererarray['ID'] = $employeedetails['ID']; 
+        if ($_POST['role_id']=='4') {
+            $pagerarray['leader'] = mysqli_real_escape_string($conn,$_POST['leader']);
+        }
+		$joining_date= mysqli_real_escape_string($conn,$_POST['join_date']);
+        $pagerarray['role_id'] = mysqli_real_escape_string($conn,$_POST['role_id']);
+        $pagerarray['fname'] = mysqli_real_escape_string($conn,$_POST['fname']);
+        $pagerarray['lname'] = mysqli_real_escape_string($conn,$_POST['lname']);  
+        $pagerarray['bankdetails'] = mysqli_real_escape_string($conn,$_POST['bankdetails']);
+        $pagerarray['accntnum'] = mysqli_real_escape_string($conn,$_POST['accntnum']);
+        $pagerarray['ifsccode'] = mysqli_real_escape_string($conn,$_POST['ifsccode']);
+        $pagerarray['address'] = mysqli_real_escape_string($conn,$_POST['address']);
+        $pagerarray['income'] = mysqli_real_escape_string($conn,$_POST['income']);
+        $pagerarray['pannum'] = mysqli_real_escape_string($conn,$_POST['pannum']);
+		$pagerarray['email'] = mysqli_real_escape_string($conn,$_POST['email']);
+		$pagerarray['personal_email'] = mysqli_real_escape_string($conn,$_POST['personal_email']);
+		$pagerarray['alternate_mobile_number'] = mysqli_real_escape_string($conn,$_POST['alternate_mobile_number']);
+		$pagerarray['whatsapp_number'] = mysqli_real_escape_string($conn,$_POST['whatsapp_number']);
+		
+		
+		$pagerarray['landmark'] = mysqli_real_escape_string($conn,$_POST['landmark']);
+		$pagerarray['city'] = mysqli_real_escape_string($conn,$_POST['city']);
+		$pagerarray['state'] = mysqli_real_escape_string($conn,$_POST['state']);
+		$pagerarray['pincode'] = mysqli_real_escape_string($conn,$_POST['pincode']);
+		$pagerarray['payment_type'] = mysqli_real_escape_string($conn,$_POST['payment']);
+		$pagerarray['joining_date'] =date("d-m-Y", strtotime($joining_date));
+		$pagerarray['designation'] = mysqli_real_escape_string($conn,$_POST['designation']);
+		$pagerarray['location'] = mysqli_real_escape_string($conn,$_POST['location']);
+	    $result = updateQuery($pagerarray,'employee',$pagewererarray);
+		if(!$result){
+			header("Location: employee_list.php?usuccess=success");
+        }
 	    
-		 	}else{
-
-		$message .=" First Name Field is Empty";
-
 	}
-
+	else {
+        $message .=" First Name Field is Empty";
+	}
 }
 
 if(!empty($_POST['password-submit'])){
@@ -136,16 +99,17 @@ if(!empty($_GET['delete'])){
 $roles = roles();
 
 
-$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where leader='".$user_unique_id."' and role_id = 3 order by ID desc");
-
+$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername,role_id FROM employee where leader='".$user_unique_id."' and role_id = 3 order by ID desc");
+$superAdminAndManagers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername,role_id FROM employee 
+where ID in  ('".$empString."','".$userid."')  and role_id not in ('4')");
 
 if($employeedetails['role_id'] == '4'){
 	$labeltext = 'Manager';
 	$leader_primary = $managers;
 }
 else {
-    $labeltext = '';
-    $leader_primary = [];
+    $labeltext = 'SuperAdmin & Managers';
+    $leader_primary = $superAdminAndManagers;
 }
 
 ?>
@@ -223,7 +187,7 @@ else {
 							<div class="col-3">
 	                            <select class="form-control"  name="role_id" id="role_id" onchange="rolebasedisplay()">
 									<option value="">Select</option>
-									<?php foreach($roles as $roleid => $rolename) { if ($roleid != '0' && $roleid != '1' && $roleid != '2') {?> 
+									<?php foreach($roles as $roleid => $rolename) { if ($roleid != '0' && $roleid != '1' && $roleid != '2' && $roleid != '5' && $roleid != '6') {?> 
 	        									<option value="<?php echo $roleid; ?>" <?php if($employeedetails['role_id'] == $roleid) { echo 'selected'; } ?>><?php echo $rolename; ?></option>
 	        								<?php } } ?>
 								</select>
@@ -234,40 +198,99 @@ else {
 							<select class="form-control"  name="leader" id="leader" style="display:<?php echo $displayleadprimary; ?>">
 									<option value="">Select</option>
 									<?php for($i=0; $i < count($leader_primary); $i++) { 
-										if($employeedetails['unique_id'] != $leader_primary[$i]['unique_id']) {
+										//if($employeedetails['unique_id'] != $leader_primary[$i]['unique_id']) {
 										?>
 
 									<option value="<?= $leader_primary[$i]['unique_id'] ; ?>" <?php if($employeedetails['leader'] == $leader_primary[$i]['unique_id']) { ?> selected <?php } ?>>
-									<?= $leader_primary[$i]['leadername'] ; ?></option>
-									<?php } } ?>
+									<?= $leader_primary[$i]['leadername']. '-'.$roles[$leader_primary[$i]['role_id']] ; ?></option>
+									<?php //} 
+								} ?>
 								</select>							
 							</div>
 							</div><br>
 						<div class="form-group row">
 						    
-                        <label for="example-text-input" class="col-3 col-form-label">Enter FirstName</label>
+                        <label for="example-text-input" class="col-3 col-form-label">First Name</label>
                         <div class="col-3">
-                            <input class="form-control" name="fname" type="text" placeholder="Enter FirstName"  value="<?php echo $employeedetails['fname']; ?>" required>
+                            <input class="form-control" name="fname" id="fname" type="text" placeholder="Enter First Name"  value="<?php echo $employeedetails['fname']; ?>" required>
                         </div>
-						<label for="example-text-input" class="col-3 col-form-label">Enter LastName</label>
+						<label for="example-text-input" class="col-3 col-form-label">Last Name</label>
                         <div class="col-3">
-                            <input class="form-control" name="lname" type="text" placeholder="Enter LastName"  value="<?php echo $employeedetails['lname']; ?>" required>
+                            <input class="form-control" name="lname" id="lname" type="text" placeholder="Enter Last Name"  value="<?php echo $employeedetails['lname']; ?>" required>
                         </div>
 						</div><br>
 						
 					<div class="form-group row">
-                        <label for="example-text-input" class="col-3 col-form-label">Enter Email</label>
+                        <label for="example-text-input" class="col-3 col-form-label">Offical Email</label>
                         <div class="col-3">
-                            <input class="form-control" type="text" name="email" placeholder="Enter employee email" id="example-text-input"   value="<?php echo $employeedetails['email']; ?>" readonly  >
+                            <input class="form-control" type="text" name="email" placeholder="Enter Offical Email" id="email"   value="<?php echo $employeedetails['email']; ?>" readonly  >
                         </div>
-						<label for="example-text-input" class="col-3 col-form-label">Enter Mobile Number</label>
+						<label for="example-text-input" class="col-3 col-form-label">Personal Email</label>
                         <div class="col-3">
-                            <input class="form-control" type="text" name="mobile" placeholder="Enter mobile number"  value="<?php echo $employeedetails['mobile']; ?>" readonly >
+                            <input class="form-control" type="text" name="personal_email" placeholder="Enter Personal Email" id="personal_email" name="personal_email"   value="<?php echo $employeedetails['personal_email']; ?>" readonly  >
                         </div>
+
                     </div>	 
 					<br>
+					<div class="form-group row ">
+        							<label class="font-weight-bold">Mobile Numbers</label>
+        							<div class="col">
+        									<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Mobile No"  name="mobile" value="<?php echo $employeedetails['mobile']; ?>"  required maxlength="10" pattern="\d{10}" id="mobile" >
+        							</div>
+        							<div class="col">
+        									<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Enter Whatsapp Number"  name="whatsapp_number" value="<?php echo $employeedetails['whatsapp_number']; ?>"  required maxlength="10" pattern="\d{10}" id="mobile" >
+        							</div>
+        							<div class="col">
+										<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Enter Alternate Mobile Number"  name="alternate_mobile_number" value="<?php echo $employeedetails['alternate_mobile_number']; ?>"  required maxlength="10" pattern="\d{10}" id="mobile" >
+        							</div>
+        			</div><br>
 					<div class="form-group row">
-                        <label for="example-text-input" class="col-3 col-form-label">Enter Bank Details</label>
+                        <label for="example-text-input" class="col-3 col-form-label">Address</label>
+                        <div class="col-12">
+						<div class="form-group">
+							<textarea class="form-control"  name="address" id="exampleTextarea" rows="4" required><?php echo $employeedetails['address']; ?></textarea>
+						</div>
+
+                        </div>
+                    </div><br>
+					<div class="row mt-2">
+        							<div class="col">
+        									<label class="font-weight-bold">Landmark</label>
+        									<input type="text" class="form-control" placeholder="Enter Landmark" id="landmark" name="landmark" value="<?= $employeedetails['landmark'] ?>" required>
+        							</div>
+        							<div class="col">
+        									<label class="font-weight-bold">City</label>
+        									<input type="text" class="form-control" placeholder="Enter City" id="city" name="city" value="<?= $employeedetails['city'] ?>" required>
+        							</div>
+        						</div><br>
+    							<div class="row mt-2">
+    								<div class="col">
+    									<label class="font-weight-bold">State</label>
+    									<input type="text" class="form-control" placeholder="Enter State" name="state" required value="<?= $employeedetails['state'] ?>" id="state">
+    								</div>
+    								<div class="col">
+    									<label class="font-weight-bold">Pin code</label>
+    									<input type="text" class="form-control" placeholder="Enter pincode" id="pincode" value="<?= $employeedetails['pincode'] ?>" maxlength="6" name="pincode" required>
+    								</div>
+    							</div><br>
+    							<div class="row mt-2"> 
+    								<div class="col">
+    									<label for="example-text-input" class="font-weight-bold">Joining Date</label>
+    									<input class="form-control" type="date" name="join_date" id="join_date" value="<?php echo date('Y-m-d'); ?>" required/>
+    								</div>   
+    								<div class="col"> 
+    									<label for="example-text-input" class="font-weight-bold">Payment Type</label>
+    									<select class="form-select form-control" aria-label="Default select example" name='payment' id="payment" onchange="return paymentType();" required>
+    										<option value="">Select</option>
+    										<option value="review_pay" <?php if($employeedetails['payment_type'] == 'review_pay') { echo 'selected'; }  ?>>Review Pay</option>
+    										<option value="variable_pay" <?php if($employeedetails['payment_type'] == 'variable_pay') { echo 'selected'; } ?>>Variable Pay</option>
+    										<option value="royalty_pay" <?php if($employeedetails['payment_type'] == 'royalty_pay') { echo 'selected'; } ?>>Royalty Pay</option>
+    									</select>
+    								</div>
+    							</div><br>
+					<div class="form-group row">
+					
+					<label for="example-text-input" class="col-3 col-form-label">Enter Bank Details</label>
                         <div class="col-3">
                             <input class="form-control" type="text" name="bankdetails"   value="<?php echo $employeedetails['bankdetails']; ?>" placeholder="Enter Bank Name" id="example-text-input">
                         </div>
@@ -280,24 +303,6 @@ else {
                     </div>
                     <br>
 					
-					<div class="form-group row">
-                        <label for="example-text-input" class="col-3 col-form-label">Upload PAN Card</label>
-                        <div class="col-3">
-							<div class="custom-file">
-                                <input type="file" class="custom-file-input" name="panimg" id="customFile">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
-                            </div>
-						</div>
-						
-						<label for="example-text-input" class="col-3 col-form-label">Upload ADHAAR Card</label>
-                        <div class="col-3">
-							<div class="custom-file">
-                                <input type="file" class="custom-file-input" name="adhaarimg" id="customFile">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
-                            </div>
-						</div>
-                    </div>
-                    <br>
 					<div class="form-group row">
 						    
                     
@@ -315,16 +320,24 @@ else {
                         
 						</div>
 						<br>
-					
-					 <div class="form-group row">
-                        <label for="example-text-input" class="col-3 col-form-label">Address</label>
-                        <div class="col-12">
-						<div class="form-group">
-							<textarea class="form-control"  name="address" id="exampleTextarea" rows="4" required><?php echo $employeedetails['address']; ?></textarea>
-						</div>
+						<div class="row mt-2">
+        								<div class="col"> 
+        									<label for="example-text-input" class="font-weight-bold">Designation</label>
+        									<select class="form-select form-control" aria-label="Default select example" name="designation" required id="designation">
+        										<option value="">Select</option>
+        										<option value="Telecaller" <?php if($employeedetails['designation'] == 'Telecaller') { echo 'selected'; }  ?>>Telecaller</option>
+        										<option value="Business Development Associate" <?php if($employeedetails['designation'] == 'Business Development Associate') { echo 'selected'; }  ?>>Business Development Associate</option>
+        										<option value="Digital Marketing Executive" <?php if($employeedetails['designation'] == 'Digital Marketing Executive') { echo 'selected'; }  ?>>Digital Marketing Executive</option>
+        										<option value="HR Manager" <?php if($employeedetails['designation'] == 'HR Manager') { echo 'selected'; }  ?>>HR Manager</option>
+        										<option value="Team Leader" <?php if($employeedetails['designation'] == 'Team Leader') { echo 'selected'; }  ?>>Team Leader</option>
+        									</select>
+        								</div>
+        								<div class="col"> 
+        									<label for="example-text-input" class="font-weight-bold">Work Location</label>
+        									<input class="form-control" type="text" name="location"  value="<?= $employeedetails['location']; ?>"    placeholder="Enter work location" id="location" required>
+        								</div> 
+        							</div>
 
-                        </div>
-                    </div>
                     <br> 
                     <div class="form-group row">
                        <div class="col-3">
@@ -387,11 +400,19 @@ else {
 		var unique_id = '<?= $employeedetails['unique_id'] ; ?>';
 
 		var role_id = $("#role_id").val();
+		var rolesJson = '<?= json_encode(roles()); ?>'
+        var roles = JSON.parse(rolesJson);
 		if(role_id == '4') {
 			$("#rolebaseid").show();
 			$("#leader").show();
 			var leaders = '<?= json_encode($managers) ; ?>';
 			var label = 'Managers';
+		}
+		else if(role_id == '3') {
+			$("#rolebaseid").show();
+			$("#leader").show();
+			var leaders = '<?= json_encode($superAdminAndManagers) ; ?>';
+			var label = 'SuperAdmin & Managers';
 		}
 		else {
 			$("#rolebaseid").hide();
@@ -403,7 +424,7 @@ else {
 		$("#leader").append(`<option value = ''>Select</option>`);
 		for(var i=0;i<leaderarray.length; i++) { 
 			if(unique_id != leaderarray[i]['unique_id']) {
-			$("#leader").append(`<option value = "${leaderarray[i]['unique_id']}">${leaderarray[i]['leadername']}</option>`)
+			$("#leader").append(`<option value = "${leaderarray[i]['unique_id']}">${leaderarray[i]['leadername']} - ${roles[leaderarray[i]['role_id']]}</option>`)
 			}
 		}
 	}

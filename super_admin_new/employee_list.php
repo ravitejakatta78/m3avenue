@@ -51,7 +51,7 @@ if(!empty($_POST['fname'])){
 
 		$joining_date= mysqli_real_escape_string($conn,$_POST['join_date']);
 		$pagerarray['role_id'] = mysqli_real_escape_string($conn,$_POST['role_id']) ?? 2;
-		$pagerarray['leader']= ($_POST['role_id'] == '4') ? ($_POST['leader'] ??  $user_unique_id) : $user_unique_id;
+		$pagerarray['leader']= !empty($_POST['leader']) ? $_POST['leader'] : $user_unique_id;
 		$pagerarray['fname'] = mysqli_real_escape_string($conn,$_POST['fname']);
 		$pagerarray['lname'] = mysqli_real_escape_string($conn,$_POST['lname']);
 		$pagerarray['unique_id'] = 'M3'.sprintf('%05d',$newuniquid);
@@ -154,9 +154,10 @@ function upload_employee_documents($filearray,$filenamearray,$emp_id){
 
 $roles = roles();
 
-$superadmins = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where ID =  '".$userid."'");
-$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername FROM employee where role_id = 3 
+$managers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername,role_id FROM employee where role_id = 3 
 and leader = '".$user_unique_id."' order by ID desc");
+$superAdminAndManagers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername,role_id FROM employee 
+where ID in  ('".$empString."','".$userid."')  and role_id not in ('4')");
 $manager_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 3  order by ID desc");
 $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 4  order by ID desc");
 
@@ -301,7 +302,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 									<tbody>
 										<?php
 
-										$sql = runloopQuery("SELECT * FROM employee where ID in ('".$empString."')  order by ID desc");
+										$sql = runloopQuery("SELECT * FROM employee where ID in ('".$empString."')  and role_id not in ('5','6') order by ID desc");
 
 										$x=1;  foreach($sql as $row)
 										{
@@ -399,7 +400,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         							<label for="example-text-input" class="font-weight-bold">Role</label>
         							<select class="form-control"  name="role_id" id="role_id" onchange="rolebasedisplay()" required>
         								<option value="">Select</option>
-        								<?php foreach($roles as $roleid => $rolename) { if ($roleid != '0' && $roleid != '1' && $roleid != '2') {?> 
+        								<?php foreach($roles as $roleid => $rolename) { if ($roleid != '0' && $roleid != '1' && $roleid != '2' && $roleid != '5' && $roleid != '6') {?> 
         									<option value="<?php echo $roleid; ?>"><?php echo $rolename; ?></option>
         								<?php } } ?>
         							</select>
@@ -657,8 +658,8 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         				$("#rolebaselabel").html('');
 
         				var role_id = $("#role_id").val();
-
-
+						var rolesJson = '<?= json_encode(roles()); ?>'
+                        var roles = JSON.parse(rolesJson);
         				if(role_id == '4') 
         				{
         					$("#rolebaseid").show();
@@ -668,10 +669,11 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         				}
         				else if(role_id == '3')
         				{
-        					$("#rolebaseid").hide();
+        					$("#rolebaseid").show();
         					var designations = '<?= json_encode($manager_deisgnations) ; ?>';
-        					console.log(designations);
-        				}
+							var leaders = '<?= json_encode($superAdminAndManagers) ; ?>';
+							var label = 'SuperAdmin & Managers';
+						}
         				else 
         				{
         					$("#designation").html('');
@@ -693,7 +695,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         				$("#leader").html('');
         				$("#leader").append(`<option value = ''>Select</option>`);
         				for(var i=0;i<leaderarray.length; i++) { 
-        					$("#leader").append(`<option value = "${leaderarray[i]['unique_id']}">${leaderarray[i]['leadername']}</option>`)
+        					$("#leader").append(`<option value = "${leaderarray[i]['unique_id']}">${leaderarray[i]['leadername']} - ${roles[leaderarray[i]['role_id']]}</option>`)
         				}
         			}
         			function changedialerstatus(name,id){
