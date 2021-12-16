@@ -221,146 +221,14 @@ $userdetails = runQuery("select * from employee where ID = '".$usersid."'");
 								&&!empty($_REQUEST['address'])
 								&& !empty($_REQUEST['pannum'])
 								){
-					$pagerarray = $sql  = array();
-	if(!empty($_REQUEST['employeeid'])){
-		$employeeid = $_REQUEST['employeeid'];
-		$sql = runQuery("select * from employee where ID = '".$employeeid."'");	
-	}
-	else{
-		$employeeid = '';
-	}					
-
-					if (!file_exists('../../admin/empimage')) {	
-							mkdir('../admin/empimage', 0777, true);	
-						}
-						$target_dir = '../../admin/empimage/';									
-				
-						$file = @$_FILES["panimg"]['name'];
-						if($file){
-							$extn = pathinfo($file, PATHINFO_EXTENSION);
-							$file = strtolower(base_convert(time(), 10, 36) . '_pan_' . md5(microtime())).'.'.$extn;				
-							$target_file = $target_dir . strtolower($file);		
-					
-							$uploadOk = 1;
-							$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-					
-							if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-					
-								{
-	
-							$payload = array("status" => '0','message'=>"Sorry, only JPG, JPEG, PNG & GIF files are allowed.") ;
-							$uploadOk = 0;						
-							}
-							if ($uploadOk == 0) {			
-									
-							$payload = array("status" => '0','message'=>"Sorry, your file was not uploaded.") ;
-	
-						} else {
-								if (move_uploaded_file($_FILES["panimg"]["tmp_name"], $target_file)){				
-									$pagerarray['panimg'] = strtolower($file);	
-									if(!empty($employeeid)){
-										unlink($target_dir.$sql['panimg']);
+									$pagerarray = $sql  = array();
+									if(!empty($_REQUEST['employeeid'])){
+										$employeeid = $_REQUEST['employeeid'];
+										$sql = runQuery("select * from employee where ID = '".$employeeid."'");	
+									}
+									else{
+										$employeeid = '';
 									}					
-									} else {
-										$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;
-	
-									}
-									}
-						}else{
-
-						}
-						//adhaarimg
-						$file = @$_FILES['adhaarimg']['name'];
-						if($file){
-							$extn = pathinfo($file, PATHINFO_EXTENSION);
-							$file = strtolower(base_convert(time(), 10, 36) . '_adhar_' . md5(microtime())).'.'.$extn;
-							$target_file = $target_dir . strtolower($file);		
-					
-							$uploadOk = 1;
-							$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-					
-							if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-					
-								{
-									$payload = array("status" => '0','message'=>"Sorry, only JPG, JPEG, PNG & GIF files are allowed.") ;
-							
-							$uploadOk = 0;						
-							}
-							if ($uploadOk == 0) {			
-								$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;		
-							} else {
-								if (move_uploaded_file($_FILES["adhaarimg"]["tmp_name"], $target_file)){				
-									$pagerarray['adhaarimg'] = strtolower($file);
-									if(!empty($employeeid)){
-										unlink($target_dir.$sql['adhaarimg']);
-									}						
-									} else {
-										$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;			
-									}
-							}
-						}
-						
-						//adhaar rear img
-						$file = @$_FILES['adhaar_rear_img']['name'];
-						if($file){
-							$extn = pathinfo($file, PATHINFO_EXTENSION);
-							$file = strtolower(base_convert(time(), 10, 36) . '_adhar_rear_' . md5(microtime())).'.'.$extn;
-							$target_file = $target_dir . strtolower($file);		
-					
-							$uploadOk = 1;
-							$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-					
-							if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-					
-								{
-									$payload = array("status" => '0','message'=>"Sorry, only JPG, JPEG, PNG & GIF files are allowed.") ;
-							
-							$uploadOk = 0;						
-							}
-							if ($uploadOk == 0) {			
-								$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;		
-							} else {
-								if (move_uploaded_file($_FILES["adhaar_rear_img"]["tmp_name"], $target_file)){				
-									$pagerarray['adhaar_rear_img'] = strtolower($file);
-									if(!empty($employeeid)){
-										unlink($target_dir.$sql['adhaar_rear_img']);
-									}						
-									} else {
-										$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;			
-									}
-							}
-						}
-						
-						//exp_certimg
-						$file = @$_FILES['exp_cert']['name'];
-						if($file){
-							$extn = pathinfo($file, PATHINFO_EXTENSION);
-							$file = strtolower(base_convert(time(), 10, 36) . '_exp_cert_' . md5(microtime())).'.'.$extn;
-							$target_file = $target_dir . strtolower($file);		
-					
-							$uploadOk = 1;
-							$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);								
-					
-							if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"&& $imageFileType != "gif" )
-					
-								{
-									$payload = array("status" => '0','message'=>"Sorry, only JPG, JPEG, PNG & GIF files are allowed.") ;
-							
-							$uploadOk = 0;						
-							}
-							if ($uploadOk == 0) {			
-								$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;		
-							} else {
-								if (move_uploaded_file($_FILES["exp_cert"]["tmp_name"], $target_file)){				
-									$pagerarray['exp_cert'] = strtolower($file);
-									if(!empty($employeeid)){
-										unlink($target_dir.$sql['exp_cert']);
-									}						
-									} else {
-										$payload = array("status" => '0','message'=>"Sorry, There Was an Error Uploading Your File.") ;			
-									}
-							}
-						}
 						
 						$uniqueusers = (int)runQuery("select max(ID) as id from employee order by ID desc")['id'];
 						$newuniquid = $uniqueusers+1;
@@ -385,6 +253,16 @@ $userdetails = runQuery("select * from employee where ID = '".$usersid."'");
 						$pagerarray['location'] = mysqli_real_escape_string($conn,$_REQUEST['location']);
 						$pagerarray['emergency_contact'] = mysqli_real_escape_string($conn,$_REQUEST['emergency_contact']);
 						$pagerarray['gender'] = mysqli_real_escape_string($conn,$_REQUEST['gender']);
+
+						$pagerarray['whatsapp_number'] = mysqli_real_escape_string($conn,$_REQUEST['whatsapp_number']);
+						$pagerarray['alternate_mobile_number'] = mysqli_real_escape_string($conn,$_REQUEST['alternate_mobile_number']);
+						$pagerarray['personal_email'] = mysqli_real_escape_string($conn,$_REQUEST['personal_email']);
+						$pagerarray['landmark'] = mysqli_real_escape_string($conn,$_REQUEST['landmark']);
+						$pagerarray['state'] = mysqli_real_escape_string($conn,$_REQUEST['state']);
+						$pagerarray['city'] = mysqli_real_escape_string($conn,$_REQUEST['city']);
+						$pagerarray['pincode'] = mysqli_real_escape_string($conn,$_REQUEST['pincode']);
+
+
 						$pagerarray['status'] = '0';
 						if(!empty($_REQUEST['employeeid']))
 						{
