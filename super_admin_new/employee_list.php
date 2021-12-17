@@ -430,24 +430,24 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         						<div class="row mt-2">
         							<div class="col">
         								<label class="font-weight-bold">Offical Email</label>
-        								<input class="form-control" type="text" name="employee_email" placeholder="Enter employee email" id="employee_email" required>  
+        								<input class="form-control" type="text" name="employee_email" placeholder="Enter employee email" id="employee_email" onchange="validate_email('employee_email')" required>  
         							</div>
         							<div class="col">
         								<label class="font-weight-bold">Personal Email</label>
-        								<input class="form-control" type="text" name="personal_email" placeholder="Enter personal email" id="personal_email" required>  
+        								<input class="form-control" type="text" name="personal_email" placeholder="Enter personal email" id="personal_email" onchange="validate_email('personal_email')" required>  
         							</div>
         						</div>
         						<div class="row mt-2">
         							<label class="font-weight-bold">Mobile Numbers</label>
         							<div class="col">
-        									<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Mobile No"  name="mobile" value=""  required maxlength="10" pattern="\d{10}" id="mobile" >
+        									<input type="text" class="form-control form-control-line"   placeholder="Mobile No"  name="mobile" value=""  required maxlength="10" onchange="validatemobilenumber('mobile')" id="mobile" >
         							</div>
         							<div class="col">
-        									<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Enter Whatsapp Number"  name="whatsapp_number" value=""  required maxlength="10" pattern="\d{10}" id="mobile" >
+        									<input type="text" class="form-control form-control-line"   placeholder="Enter Whatsapp Number"  name="whatsapp_number" value=""  required maxlength="10" onchange="validatemobilenumber('whatsapp_number')" id="whatsapp_number" >
         							</div>
         							<div class="col">
         									
-        									<input type="text" class="form-control form-control-line"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" placeholder="Enter Alternate Mobile Number"  name="alternate_mobile_number" value=""  required maxlength="10" pattern="\d{10}" id="mobile" >
+        									<input type="text" class="form-control form-control-line"   placeholder="Enter Alternate Mobile Number"  name="alternate_mobile_number" value=""  required maxlength="10" onchange="validatemobilenumber('alternate_mobile_number')" id="alternate_mobile_number" >
         							</div>
         						</div>
         						<div class="row mt-2">
@@ -483,7 +483,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
     								</div>
     								<div class="col">
     									<label class="font-weight-bold">Pin code</label>
-    									<input type="text" class="form-control" placeholder="Enter pincode" id="pincode" maxlength="6" name="pincode" required>
+    									<input type="text" class="form-control" placeholder="Enter pincode" id="pincode" maxlength="6" name="pincode"  onchange="validate_pincode()" required>
     								</div>
     							</div>
     							<div class="row mt-2"> 
@@ -878,6 +878,45 @@ $(document).ready(function(){
    });
  });
 });
+
+function validatemobilenumber(id) {
+	var pattern=/^\d{10}$/;
+	var mobilenumber = $("#"+id).val();
+	if(!pattern.test(mobilenumber))
+	{
+		alert("Please Provide Valid Number");
+		$("#"+id).val('');
+		return false;
+	}
+
+	
+}
+
+function validate_pincode() {
+	var pattern=/^\d{6}$/;
+	var pincode = $("#pincode").val();
+	if(!pattern.test(pincode))
+	{
+		alert("Pincode should be 6 digits ");
+		$("#pincode").val('');
+		return false;
+	}
+	
+}
+
+function validate_email(id) {
+	var filter=/^([a-z A-Z 0-9 _\.\-])+\@(([a-z A-Z 0-9\-])+\.)+([a-z A-z 0-9]{3,3})+$/;
+	var email = $("#"+id).val();
+	if(!filter.test(email))
+	{
+		alert("Email is in www.gmail.com format");
+		$("#"+id).val('');
+		return false;
+}
+
+}
+
+
 
     </script>
 
