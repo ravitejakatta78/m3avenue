@@ -225,7 +225,7 @@
 						</a>
                         <ul aria-expanded="false">
                             <li><a href="#">Offer letter generator</a></li>
-                            <li><a href="#">Attendance</a></li>
+                            <li><a href="attendance_list.php">Attendance</a></li>
 							<li><a href="#">Payroll</a></li>
                     		<li><a href="#">Auto Pay slip Generator</a></li>
                         </ul>
