@@ -31,4 +31,6 @@
         <script src="assets/vendor/datatables/js/jquery.dataTables.min.js"></script>
         <script src="assets/js/plugins-init/datatables.init.js"></script>
 
+		<script src="assets/js/jquery.datetimepicker.full.min.js"></script>
+
 	

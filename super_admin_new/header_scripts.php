@@ -8,3 +8,4 @@
     <link href="assets/css/style.css" rel="stylesheet">
     <!-- Datatable -->
 	<link href="assets/vendor/datatables/css/jquery.dataTables.min.css" rel="stylesheet">
+	<link href="assets/css/jquery.datetimepicker.min.css" rel="stylesheet">
