@@ -75,6 +75,7 @@ if(!empty($_POST['fname'])){
 		$pagerarray['joining_date'] =date("d-m-Y", strtotime($joining_date));
 		$pagerarray['designation'] = mysqli_real_escape_string($conn,$_POST['designation']);
 		$pagerarray['location'] = mysqli_real_escape_string($conn,$_POST['location']);
+		$pagerarray['gender'] = mysqli_real_escape_string($conn,$_POST['gender']);
 		$pagerarray['status'] = '1';
 
 		$new_employee_id = insertIDQuery($pagerarray,'employee');
@@ -160,9 +161,6 @@ $superAdminAndManagers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) 
 where ID in  ('".$empString."','".$userid."')  and role_id not in ('4')");
 $manager_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 3  order by ID desc");
 $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where role_under = 4  order by ID desc");
-
-
-
 
 ?>
 
@@ -544,8 +542,18 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
         									<label for="example-text-input" class="font-weight-bold">Work Location</label>
         									<input class="form-control" type="text" name="location"     placeholder="Enter work location" id="location" required>
         								</div> 
-        							</div>			
-									<table id="tblAddRow" class="table table-bordered table-striped">
+        							</div>
+									<div class="row mt-2">
+										<div class="col-6"> 
+        									<label for="example-text-input" class="font-weight-bold">Gender</label>
+        									<select id="gender" name="gender" class="form-control" required>
+												<option value="">Select</option>
+												<option value="1">Male</option>
+												<option value="2">Female</option>
+											</select>
+        								</div> 
+									</div>
+									<table id="tblAddRow" class="table table-bordered table-striped mt-2">
 						<thead>
 							<tr>
 							    <th>File Name</th>

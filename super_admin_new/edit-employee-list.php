@@ -337,8 +337,18 @@ else {
         									<input class="form-control" type="text" name="location"  value="<?= $employeedetails['location']; ?>"    placeholder="Enter work location" id="location" required>
         								</div> 
         							</div>
-
                     <br> 
+					<div class="row">
+        				<div class="col"> 
+						<label for="example-text-input" class="font-weight-bold">Gender</label>
+        									<select id="gender" name="gender" class="form-control" required>
+												<option value="">Select</option>
+												<option value="1" <?php if($employeedetails['gender'] == '1') { echo 'selected'; }  ?>>Male</option>
+												<option value="2" <?php if($employeedetails['gender'] == '2') { echo 'selected'; }  ?>>Female</option>
+											</select>
+						</div>
+					</div>
+					<br>	
                     <div class="form-group row">
                        <div class="col-3">
                              <button type="submit" name="submit" value="submit" class="btn btn-primary btn-elevate btn-pill">Update Employee</button>
