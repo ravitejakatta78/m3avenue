@@ -127,7 +127,7 @@
 		                </ul>
                             <li><a href="leads.php">Lead List</a></li>
 							<li><a href="clients.php">Client List</a></li>
-							<li><a href="work-source.php">Work Source</a></li>
+							<li><a href="work-source.php">Configuration</a></li>
 							<li><a href="follow-up-leads.php">Follow Up Leads</a></li>
 							<!-- <li><a href="follow-up-clients.php">Follow Up Clients</a></li> -->
                         </ul>
