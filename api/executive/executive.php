@@ -55,6 +55,7 @@ switch($action){
 			   $row = runQuery("SELECT * FROM employee WHERE mobile = '$mymailid'");
 		  }
 		  if(!empty($row['ID'])){
+			  if($row['status'] != '1'){
 			  if(password_verify($mypassword,$row['password'])){
 				if($row['status']==1){
 				    $userwherearray['ID'] = $row['ID'];
@@ -69,6 +70,9 @@ switch($action){
 						
 					$payload = array("status"=>'0',"text"=>"Invalid Password");
 			  }
+			}else{
+				$payload = array("status"=>'0',"text"=>"User is Inactive");
+			}
 			  }  else {
 						
 					$payload = array("status"=>'0',"text"=>"Invalid Email / Mobile number");
@@ -93,22 +97,25 @@ switch($action){
 		  }else{
 			   $row = runQuery("SELECT * FROM employee WHERE mobile = '$mymailid'");
 		  }
-		  if(!empty($row['ID'])){
-			  if(password_verify($mypassword,$row['password'])){
-			      	 $userwherearray['ID'] = $row['ID'];
-					$userarray['token'] =  mysqli_real_escape_string($conn,$_REQUEST['token']); 
-					$resultupdate = updateQuery($userarray,"employee",$userwherearray);
-					$payload = array("status"=>'1',"usersid" => $row['ID'],'token' => $userarray['token'],"role_id" => $row['role_id']);
-
-				
-			  }  else {
-						
-					$payload = array("status"=>'0',"text"=>"Invalid Password");
-			  }
-			  }  else {
-						
-					$payload = array("status"=>'0',"text"=>"Invalid Email / Mobile number");
-			  }
+		  if(!empty($row['ID'])) {
+			    if($row['status'] != '1') {
+			  	    if(password_verify($mypassword,$row['password'])) {
+						$userwherearray['ID'] = $row['ID'];
+						$userarray['token'] =  mysqli_real_escape_string($conn,$_REQUEST['token']); 
+						$resultupdate = updateQuery($userarray,"employee",$userwherearray);
+						$payload = array("status"=>'1',"usersid" => $row['ID'],'token' => $userarray['token'],"role_id" => $row['role_id']);
+     				}
+					else {
+						$payload = array("status"=>'0',"text"=>"Invalid Password");
+					}
+				}
+				else{
+					$payload = array("status"=>'0',"text"=>"User is Inactive");
+				}
+			}
+			else {
+				$payload = array("status"=>'0',"text"=>"Invalid Email / Mobile number");
+			}
 		  }else{
 						
 			$payload = array("status"=>'0',"text"=>"Please enter the password");
