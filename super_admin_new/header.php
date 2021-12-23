@@ -102,6 +102,7 @@
                             <li><a href="employee-track-work.php">Employee Track Work</a></li>
 							<li><a href="track_team.php">Track Team</a></li>
 							<li><a href="ticket_history.php">Ticket History</a></li>
+							<li><a href="designations.php">Configuration</a></li>
                         </ul>
                     </li>
                 	<?php  } ?>

@@ -400,7 +400,6 @@ $("#myModal").modal('show');
 	}
 
     $('.edit_designation').on('click',function(){
-        alert('hello');
         var id=$(this).data('id');
         var name=$(this).data('name');
         var role=$(this).data('role');
