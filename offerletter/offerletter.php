@@ -457,7 +457,7 @@ $pagerarray['status'] = '1';
 $pagewererarray['ID'] = $sql['ID'];
 $resultupdate = updateQuery($pagerarray, 'employee', $pagewererarray);
 if($_GET['path'] == 'admin'){
-    header("Location: ../admin/employee_list.php?osuccess=success");
+    header("Location: ../admin/employe-list.php?osuccess=success");
 }else{
     header("Location: ../super_admin_new/employee_list.php?osuccess=success");
 }
