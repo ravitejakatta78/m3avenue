@@ -456,5 +456,8 @@ $pdf->Output($filename, 'F');
 $pagerarray['status'] = '1';
 $pagewererarray['ID'] = $sql['ID'];
 $resultupdate = updateQuery($pagerarray, 'employee', $pagewererarray);
-
-header("Location: ../super_admin_new/employee_list.php?osuccess=success");
+if($_GET['path'] == 'admin'){
+    header("Location: ../admin/employee_list.php?osuccess=success");
+}else{
+    header("Location: ../super_admin_new/employee_list.php?osuccess=success");
+}

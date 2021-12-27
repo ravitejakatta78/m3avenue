@@ -337,7 +337,7 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 													<a class="btn btn-info" target="_blank" href="../offerletter/Offer_letters/<?php echo $row["unique_id"]?>_offerletter.pdf"><i class="fa fa-download" title="Download" aria-hidden="true"></i></a> 
 													
 												<?php } else { ?>
-													<a class="btn btn-info" href="../offerletter/offerletter.php?id=<?php echo $row['ID']?>"><i class="fa fa-file" aria-hidden="true" title="Generate"></i></a>
+													<a class="btn btn-info" href="../offerletter/offerletter.php?id=<?php echo $row['ID']?>&path=superadmin"><i class="fa fa-file" aria-hidden="true" title="Generate"></i></a>
 												<?php } ?>
 												<br>
 												<?php echo "Requested By:".lead_details($row["leader"],'fname'); ?>
@@ -629,7 +629,6 @@ $executive_deisgnations = runloopQuery("SELECT * FROM tbl_designations where rol
 				</form>
 		      </div>
 		    </div>
-
 		  </div>
 		</div>
 

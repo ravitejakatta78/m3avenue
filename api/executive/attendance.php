@@ -49,13 +49,13 @@ if(!empty($usersid)){
 		if(!empty($action)){
 		switch($action){
 			case 'clockin':
-				if(!empty($_REQUEST['clock_in'])){
+				if(!empty($_REQUEST['clockin'])){
 					$sqlempdetails = runQuery("select * from employee_attendance ea where ea.emp_id = {$usersid} and date(attendance_date) = '".date('Y-m-d')."'");
 					if(empty($sqlempdetails)){
 						$pagearray = [];
 						$pagearray['emp_id'] = $usersid;
-						$pagearray['attendance_date'] = date('Y-m-d',strtotime($_REQUEST['clock_in']));
-						$pagearray['clock_in'] = date('H:i',strtotime($_REQUEST['clock_in']));
+						$pagearray['attendance_date'] = date('Y-m-d',strtotime($_REQUEST['clockin']));
+						$pagearray['clock_in'] = date('H:i',strtotime($_REQUEST['clockin']));
 						$pagearray['lat'] = !empty($_REQUEST['lat']) ? $_REQUEST['lat'] : '';
 						$pagearray['lng'] = !empty($_REQUEST['lng']) ? $_REQUEST['lng'] : '';
 						$pagearray['reg_date'] = date('Y-m-d H:i:s A');
@@ -72,11 +72,11 @@ if(!empty($usersid)){
 				}
 			break;
 			case 'clockout':
-				if(!empty($_REQUEST['clock_out'])){
+				if(!empty($_REQUEST['clockout'])){
 					$sqlempdetails = runQuery("select * from employee_attendance ea where ea.emp_id = {$usersid} and date(attendance_date) = '".date('Y-m-d')."'");
 					if(!empty($sqlempdetails) && empty($sqlempdetails['clock_out'])){
 						$pagearray = $pagewherearray = [];
-						$pagearray['clock_out'] = date('H:i',strtotime($_REQUEST['clock_out']));
+						$pagearray['clock_out'] = date('H:i',strtotime($_REQUEST['clockout']));
 
 						$totalhrs = 0;
 						$clock_in = $sqlempdetails['clock_in'];
@@ -204,4 +204,3 @@ else{
 	$payload = array('status'=>'0','message'=>'Invalid users details');
 }
 echo json_encode($payload);
-?>

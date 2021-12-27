@@ -367,7 +367,7 @@ $opsmanagers = runloopQuery("SELECT unique_id,concat(fname,' ',lname) leadername
 																	?>
 
 																<?php } else { ?>
-																	<a class="btn btn-info" href="../offerletter/offerletter.php?id=<?php echo $row['ID']?>">Generate</a>
+																	<a class="btn btn-info" href="../offerletter/offerletter.php?id=<?php echo $row['ID']?>&path=admin">Generate</a>
 																<?php } ?>
 																<br>
 																<?php echo "Requested By:".lead_details($row["leader"],'fname'); 
