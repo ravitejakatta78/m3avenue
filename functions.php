@@ -10,6 +10,8 @@ ini_set('log_errors', 'On');
 
 define('SITE_URL','https://superpilot.in/dev/m3avenue.com/');
 
+define('MAIN_URL','https://localhost/');
+
 define('EMPLOYEE_IMAGE',SITE_URL.'executiveimage/');
 define('PAGE_URL',SITE_URL.'admin/');
 define('MAILID','info@m3avenue.com');
@@ -1637,6 +1639,20 @@ function dfupdatecals($arr){
 			
 			return $parent; 
 			
+	}
+	function uploadimage($filearray,$usersid){
+		$file_tmpname = $filearray['tmp_name'];
+		$file_name = $filearray['name'];
+		$file_size = $filearray['size'];
+		$file_ext = pathinfo($file_name, PATHINFO_EXTENSION);		
+		$newname = date('YmdHis',time()).mt_rand().'.'.$file_ext;
+		$path = '../../../sp_ace_docs/attendance/'.$usersid.'/';
+		if (!is_dir($path)) {
+			mkdir($path, 0777, true);
+		}
+
+		move_uploaded_file($file_tmpname,$path.'/'.$newname);
+		return $newname;
 	}  
 
 ?>
