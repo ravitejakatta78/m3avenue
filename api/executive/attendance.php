@@ -60,6 +60,7 @@ if(!empty($usersid)){
 						$pagearray['clockin_lng'] = !empty($_REQUEST['lng']) ? $_REQUEST['lng'] : '';
 						$imagename = uploadimage($_FILES['selfie_img'],$usersid);
 						$pagearray['clockin_img'] = !empty($imagename) ? $imagename : '';
+						$pagearray['clockin_range'] = !empty($_REQUEST['clockin_range']) ? $_REQUEST['clockin_range'] : '0';
 						$pagearray['reg_date'] = date('Y-m-d H:i:s A');
 						$result = insertQuery($pagearray,'employee_attendance');
 						$payload = ['status' => '1', 'message' => 'Clock in details are updated successfully'];
@@ -83,6 +84,7 @@ if(!empty($usersid)){
 						$pagearray['clockout_lng'] = !empty($_REQUEST['lng']) ? $_REQUEST['lng'] : '';
 						$imagename = uploadimage($_FILES['selfie_img'],$usersid);
 						$pagearray['clockout_img'] = !empty($imagename) ? $imagename : '';
+						$pagearray['clockout_range'] = !empty($_REQUEST['clockout_range']) ? $_REQUEST['clockout_range'] : '0';
 						$totalhrs = 0;
 						$clock_in = $sqlempdetails['clock_in'];
 						$clock_out = $pagearray['clock_out'];
@@ -126,6 +128,7 @@ if(!empty($usersid)){
 							$pagearray['break_in'] = date('H:i',strtotime($_REQUEST['breakin']));
 							$pagearray['breakin_lat'] = !empty($_REQUEST['lat']) ? $_REQUEST['lat'] : '';
 							$pagearray['breakin_lng'] = !empty($_REQUEST['lng']) ? $_REQUEST['lng'] : '';
+							$pagearray['breakin_range'] = !empty($_REQUEST['breakin_range']) ? $_REQUEST['breakin_range'] : '0';
 							$imagename = uploadimage($_FILES['selfie_img'],$usersid);
 							$pagearray['breakin_img'] = !empty($imagename) ? $imagename : '';
 							$pagearray['reg_date'] = date('Y-m-d H:i:s');
@@ -157,6 +160,7 @@ if(!empty($usersid)){
 							$pagearray['breakout_lng'] = !empty($_REQUEST['lng']) ? $_REQUEST['lng'] : '';
 							$imagename = uploadimage($_FILES['selfie_img'],$usersid);
 							$pagearray['breakout_img'] = !empty($imagename) ? $imagename : '';
+							$pagearray['breakout_range'] = !empty($_REQUEST['breakout_range']) ? $_REQUEST['breakout_range'] : '0';
 							$pagewherearray['ID'] = $sqlbreakdetails['ID'];
 							$result = updateQuery($pagearray,'employee_break_history',$pagewherearray);
 							$payload = ['status' => '1', 'message' => 'Break Out details are updated successfully'];
@@ -181,32 +185,34 @@ if(!empty($usersid)){
 					$detailedarray = $singledetail = [];
 					foreach($sqlempdetails as $details){
 						$singledetail['attendance_date'] = $details['attendance_date'];
-						$singledetail['clock_in'] = !empty($details['clock_in']) ? $details['clock_in'] : '';
+						$singledetail['clock_in'] = !empty($details['clock_in']) ? $details['attendance_date'].' '.$details['clock_in'] : '';
 						$singledetail['clockin_lat'] = !empty($details['clockin_lat']) ? $details['clockin_lat'] : '';
 						$singledetail['clockin_lng'] = !empty($details['clockin_lng']) ? $details['clockin_lng'] : '';
 						$singledetail['clockin_img'] = !empty($details['clockin_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$details['clockin_img'] : '';
-						
-						$singledetail['clock_out'] = !empty($details['clock_out']) ? $details['clock_out'] : '';
+						$singledetail['clockin_range'] = !empty($details['clockin_range']) ? $details['clockin_range'] : '0';						
+						$singledetail['clock_out'] = !empty($details['clock_out']) ? $details['attendance_date'].' '.$details['clock_out'] : '';
 						$singledetail['clockout_lat'] = !empty($details['clockout_lat']) ? $details['clockout_lat'] : '';
 						$singledetail['clockout_lng'] = !empty($details['clockout_lng']) ? $details['clockout_lng'] : '';
 						$singledetail['clockout_img'] = !empty($details['clockout_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$details['clockout_img'] : '';
-
+						$singledetail['clockout_range'] = !empty($details['clockout_range']) ? $details['clockout_range'] : '0';
 
 						$singledetail['total_hours'] = !empty($details['total_hours']) ? $details['total_hours'] : 0;
 						$singledetail['total_break_hours'] = !empty($details['total_break_hours']) ? $details['total_break_hours'] : 0;
 						$singledetail['effective_hours'] = !empty($details['effective_hours']) ? $details['effective_hours'] : 0;
 						$breakdetail = [];
-						$sqlbreakdetails = runloopQuery("select * from employee_break_history where attendance_id = '".$details['ID']."' order by ID desc");
+						$sqlbreakdetails = runloopQuery("select ebh.*,ea.attendance_date from employee_break_history ebh inner join  employee_attendance ea 
+						on ea.ID = ebh.attendance_id where ebh.attendance_id = '".$details['ID']."' order by ebh.ID desc");
 						foreach($sqlbreakdetails as $breakdetails){
-							$breakarray['break_in'] =  $breakdetails['break_in'];
+							$breakarray['break_in'] =  $breakdetails['attendance_date'].' '.$breakdetails['break_in'];
 							$breakarray['breakin_lat'] = !empty($breakdetails['breakin_lat']) ? $breakdetails['breakin_lat'] : '';
 							$breakarray['breakin_lng'] = !empty($breakdetails['breakin_lng']) ? $breakdetails['breakin_lng'] : '';
 							$breakarray['breakin_img'] = !empty($breakdetails['breakin_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$breakdetails['breakin_img'] : '';
-
-							$breakarray['break_out'] = $breakdetails['break_out'];
+							$breakarray['breakin_range'] = !empty($breakdetails['breakin_range']) ? $breakdetails['breakin_range'] : '0';
+							$breakarray['break_out'] = $breakdetails['attendance_date'].' '.$breakdetails['break_out'];
 							$breakarray['breakout_lat'] = !empty($breakdetails['breakout_lat']) ? $breakdetails['breakout_lat'] : '';
 							$breakarray['breakout_lng'] = !empty($breakdetails['breakout_lng']) ? $breakdetails['breakout_lng'] : '';
 							$breakarray['breakout_img'] = !empty($breakdetails['breakout_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$breakdetails['breakout_img'] : '';
+							$breakarray['breakout_range'] = !empty($breakdetails['breakout_range']) ? $breakdetails['breakout_range'] : '0';
 							$breakdetail[] = $breakarray;
 						}
 						$singledetail['break_details'] = $breakdetail;						
