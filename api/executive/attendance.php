@@ -208,7 +208,7 @@ if(!empty($usersid)){
 							$breakarray['breakin_lng'] = !empty($breakdetails['breakin_lng']) ? $breakdetails['breakin_lng'] : '';
 							$breakarray['breakin_img'] = !empty($breakdetails['breakin_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$breakdetails['breakin_img'] : '';
 							$breakarray['breakin_range'] = !empty($breakdetails['breakin_range']) ? $breakdetails['breakin_range'] : '0';
-							$breakarray['break_out'] = $breakdetails['attendance_date'].' '.$breakdetails['break_out'];
+							$breakarray['break_out'] = !empty($breakdetails['break_out']) ? $breakdetails['attendance_date'].' '.$breakdetails['break_out'] : '';
 							$breakarray['breakout_lat'] = !empty($breakdetails['breakout_lat']) ? $breakdetails['breakout_lat'] : '';
 							$breakarray['breakout_lng'] = !empty($breakdetails['breakout_lng']) ? $breakdetails['breakout_lng'] : '';
 							$breakarray['breakout_img'] = !empty($breakdetails['breakout_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$breakdetails['breakout_img'] : '';
