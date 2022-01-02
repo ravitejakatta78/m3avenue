@@ -202,6 +202,7 @@ if(!empty($usersid)){
 						$breakdetail = [];
 						$sqlbreakdetails = runloopQuery("select ebh.*,ea.attendance_date from employee_break_history ebh inner join  employee_attendance ea 
 						on ea.ID = ebh.attendance_id where ebh.attendance_id = '".$details['ID']."' order by ebh.ID desc");
+						$totalbreakhrs = $total_break_min = 0;
 						foreach($sqlbreakdetails as $breakdetails){
 							$breakarray['break_in'] =  $breakdetails['attendance_date'].' '.$breakdetails['break_in'];
 							$breakarray['breakin_lat'] = !empty($breakdetails['breakin_lat']) ? $breakdetails['breakin_lat'] : '';
@@ -214,8 +215,24 @@ if(!empty($usersid)){
 							$breakarray['breakout_img'] = !empty($breakdetails['breakout_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$breakdetails['breakout_img'] : '';
 							$breakarray['breakout_range'] = !empty($breakdetails['breakout_range']) ? $breakdetails['breakout_range'] : '0';
 							$breakdetail[] = $breakarray;
+							if(!empty($breakdetails['break_out'])){
+								$breakin = str_replace(":","",$breakdetails['break_in']);
+								$breakout = str_replace(":","",$breakdetails['break_out']);
+								$totalbreakhrs += (int)$breakout -  (int)$breakin;
+								
+								$break_in_arr  = explode(":",$breakdetails['break_in']);
+								$break_out_arr  = explode(":",$breakdetails['break_out']);
+									
+								$break_in_mins = (int)($break_in_arr[0])*60 + (int)($break_in_arr[1]);
+								$break_out_mins = (int)($break_out_arr[0])*60 + (int)($break_out_arr[1]);
+								$total_break_min += (int)($break_out_mins) - (int)($break_in_mins);
+							}
 						}
-						$singledetail['break_details'] = $breakdetail;						
+
+						
+						$singledetail['total_break_min'] = $total_break_min;
+						$singledetail['break_details'] = $breakdetail;
+
 						unset($breakdetail);
 						$detailedarray[] = $singledetail;
 					}
