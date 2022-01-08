@@ -100,7 +100,7 @@ if(!empty($usersid)){
 			case 'getLeaveDetails':
 				if(!empty($_REQUEST['sdate']) && !empty($_REQUEST['edate'])){
 					
-					$sql = "select * from employee_leaves where leave_from between 
+					$sql = "select * from employee_leaves where date(leave_from) between 
 					'".$_REQUEST['sdate']."' and '".$_REQUEST['edate']."' ";
 					if($userdetails['role_id'] == '3' && $_REQUEST['teamlist'] == '1'){
 						$sql .=" and emp_id in ('".$teamidstring."')  and emp_id != '".$userdetails['ID']."' ";
