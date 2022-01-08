@@ -106,6 +106,8 @@ if(!empty($usersid)){
 						$sql .=" and emp_id in ('".$teamidstring."')  and emp_id != '".$userdetails['ID']."' ";
 					}else if($userdetails['role_id'] == '3' && $_REQUEST['teamlist'] == '2'){
 						$sql .=" and emp_id in ('".$teamidstring."')  ";
+					}else if(!empty($_REQUEST['emp_id'])){
+						$sql .=" and emp_id = ('".$_REQUEST['emp_id']."')  ";
 					}
 					else {
 						$sql .=" and emp_id in ('".$userdetails['ID']."')  ";

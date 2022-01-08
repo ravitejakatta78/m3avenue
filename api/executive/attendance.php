@@ -85,6 +85,10 @@ if(!empty($usersid)){
 						$imagename = uploadimage($_FILES['selfie_img'],$usersid);
 						$pagearray['clockout_img'] = !empty($imagename) ? $imagename : '';
 						$pagearray['clockout_range'] = !empty($_REQUEST['clockout_range']) ? $_REQUEST['clockout_range'] : '0';
+						$pagearray['total_break_hours'] = !empty($_REQUEST['total_break_hours']) ? $_REQUEST['total_break_hours'] : 0;
+						$pagearray['effective_hours'] = !empty($_REQUEST['effective_hours']) ? $_REQUEST['effective_hours'] : 0;
+						$pagearray['total_hours'] = !empty($_REQUEST['total_hours']) ? $_REQUEST['total_hours'] : 0;
+
 						$totalhrs = 0;
 						$clock_in = $sqlempdetails['clock_in'];
 						$clock_out = $pagearray['clock_out'];
