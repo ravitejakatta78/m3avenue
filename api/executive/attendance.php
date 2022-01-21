@@ -200,9 +200,9 @@ if(!empty($usersid)){
 						$singledetail['clockout_img'] = !empty($details['clockout_img']) ? MAIN_URL.'sp_ace_docs/attendance/'.$usersid.'/'.$details['clockout_img'] : '';
 						$singledetail['clockout_range'] = !empty($details['clockout_range']) ? $details['clockout_range'] : '0';
 
-						$singledetail['total_hours'] = !empty($details['total_hours']) ? $details['total_hours'] : 0;
-						$singledetail['total_break_hours'] = !empty($details['total_break_hours']) ? $details['total_break_hours'] : 0;
-						$singledetail['effective_hours'] = !empty($details['effective_hours']) ? $details['effective_hours'] : 0;
+						$singledetail['total_hours'] = !empty($details['total_hours']) ? gmdate("H:i", $details['total_hours']) : 0;
+						$singledetail['total_break_hours'] = !empty($details['total_break_hours']) ? gmdate("H:i", $details['total_break_hours']) : 0;
+						$singledetail['effective_hours'] = !empty($details['effective_hours']) ? gmdate("H:i", $details['effective_hours']) : 0;
 						$breakdetail = [];
 						$sqlbreakdetails = runloopQuery("select ebh.*,ea.attendance_date from employee_break_history ebh inner join  employee_attendance ea 
 						on ea.ID = ebh.attendance_id where ebh.attendance_id = '".$details['ID']."' order by ebh.ID desc");
