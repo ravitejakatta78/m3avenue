@@ -1654,5 +1654,8 @@ function dfupdatecals($arr){
 		move_uploaded_file($file_tmpname,$path.'/'.$newname);
 		return $newname;
 	}  
+	function getHourMinuteFormat($minutes){
+		return  floor($minutes / 60).':'.($minutes -   floor($minutes / 60) * 60);
+	}
 
 ?>
