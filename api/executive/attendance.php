@@ -105,7 +105,7 @@ if(!empty($usersid)){
 							$clock_out_mins = ((int)($clock_out_arr[0])*60) + (int)($clock_out_arr[1]);
 							$total_min = $clock_out_mins - $clock_in_mins;
 							$total_hours = round(($total_min/60),2);
-							$pagearray['total_hours'] = $total_hours;
+							//$pagearray['total_hours'] = $total_hours;
 							$pagewherearray['ID'] = $sqlempdetails['ID'];
 							$result = updateQuery($pagearray,'employee_attendance',$pagewherearray);
 							$payload = ['status' => '1', 'message' => 'Clock Out details are updated successfully'];
